@@ -1,0 +1,16 @@
+[
+{
+  "modid": "riteclicker",
+  "name": "RiteClicker Mod",
+  "description": "This mod add the functionality originally introduced by Vazkii in Garden Of Glass, where right clicking dirt or grass will drop stones.",
+  "version": "0.1.1",
+  "mcversion": "1.7.10",
+  "url": "http://www.vikanites.com",
+  "updateUrl": "",
+  "authorList": ["OCDiary"],
+  "credits": "Credits to Vazkii for the original concept, and idea.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
