@@ -1,51 +1,65 @@
 package com.ocdiary.riteclicker;
 
-import com.ocdiary.riteclicker.config.ConfigHandler;
-import com.ocdiary.riteclicker.crafting.craftingManager;
-import com.ocdiary.riteclicker.event.riteClick;
-import com.ocdiary.riteclicker.item.pebs;
+
+import com.ocdiary.riteclicker.handlers.ConfigHandler;
+import com.ocdiary.riteclicker.handlers.CraftingHandler;
+import com.ocdiary.riteclicker.item.RiteClickerItems;
 import com.ocdiary.riteclicker.lib.refs;
-import com.ocdiary.riteclicker.proxy.serverProxy;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import com.ocdiary.riteclicker.proxies.common;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.*;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.Logger;
 
-/**
- * Created by OCDiary on 13/08/2016.
- */
-
-@Mod(modid = refs.MODID, name = refs.NAME, version = refs.VERSION)
+@Mod(modid = refs.MODID, name = refs.NAME, version = refs.VERSION, acceptedMinecraftVersions = refs.AVERSION)
 public class RiteClicker {
 
-    @SidedProxy(clientSide = refs.CPROX, serverSide = refs.SPROX)
-    public static serverProxy proxy;
-
-    @Mod.Instance("RiteClicker")
+    @Instance
     public static RiteClicker instance;
 
+    @SidedProxy(clientSide = refs.CPROX, serverSide = refs.SPROX)
+    public static common proxy;
+
+    public static Logger log = FMLLog.getLogger();
+
+    public static Configuration config;
+
     @Mod.EventHandler
-    public void preLoad(FMLPreInitializationEvent e){
+    public void preInit(FMLPreInitializationEvent e) {
+        log.info("Rite Clicker Pre-Init");
+        proxy.preInit(e);
 
-       //Init the config
-        ConfigHandler.init(e.getSuggestedConfigurationFile());
+        config = new Configuration(e.getSuggestedConfigurationFile());
+        ConfigHandler.config();
 
-        //RiteClicker
-        MinecraftForge.EVENT_BUS.register(new riteClick());
-
-        //Initiliaze the pebbles
-        pebs.register();
-
-        //add the recipe
-        craftingManager.addRecipe();
+        RiteClickerItems.init();
     }
 
     @Mod.EventHandler
-    public void load(FMLInitializationEvent e){    }
+    public void init(FMLInitializationEvent e){
+        log.info("Rite Clicker Init");
+        proxy.init(e);
+
+        MinecraftForge.EVENT_BUS.register(instance);
+        CraftingHandler.init();
+    }
+
 
     @Mod.EventHandler
-    public void postLoad(FMLPostInitializationEvent e){  }
+    public void postInit(FMLPostInitializationEvent e){
+        log.info("Rite Clicker Post-Init");
+        proxy.postInit(e);
+
+
+        MinecraftForge.EVENT_BUS.register(com.ocdiary.riteclicker.handlers.EventHandler.class);
+    }
+
 }
