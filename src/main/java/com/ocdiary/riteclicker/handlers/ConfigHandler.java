@@ -1,10 +1,10 @@
 package com.ocdiary.riteclicker.handlers;
 
+
 import com.ocdiary.riteclicker.RiteClicker;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ConfigHandler {
-
     public static boolean sneakOn;
     public static boolean defaultWorld;
     public static boolean gogWorld;

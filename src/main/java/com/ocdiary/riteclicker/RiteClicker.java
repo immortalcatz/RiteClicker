@@ -2,13 +2,13 @@ package com.ocdiary.riteclicker;
 
 
 import com.ocdiary.riteclicker.handlers.ConfigHandler;
-import com.ocdiary.riteclicker.handlers.CraftingHandler;
+import com.ocdiary.riteclicker.handlers.EventsHandler;
+import com.ocdiary.riteclicker.handlers.RecipeHandler;
 import com.ocdiary.riteclicker.item.RiteClickerItems;
 import com.ocdiary.riteclicker.lib.refs;
 import com.ocdiary.riteclicker.proxies.common;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.*;
@@ -16,7 +16,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = refs.MODID, name = refs.NAME, version = refs.VERSION, acceptedMinecraftVersions = refs.AVERSION)
@@ -32,13 +31,15 @@ public class RiteClicker {
 
     public static Configuration config;
 
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e) {
         log.info("Rite Clicker Pre-Init");
-        proxy.preInit(e);
 
         config = new Configuration(e.getSuggestedConfigurationFile());
         ConfigHandler.config();
+
+        proxy.preInit(e);
 
         RiteClickerItems.init();
     }
@@ -49,7 +50,8 @@ public class RiteClicker {
         proxy.init(e);
 
         MinecraftForge.EVENT_BUS.register(instance);
-        CraftingHandler.init();
+
+        RecipeHandler.init();
     }
 
 
@@ -58,8 +60,7 @@ public class RiteClicker {
         log.info("Rite Clicker Post-Init");
         proxy.postInit(e);
 
-
-        MinecraftForge.EVENT_BUS.register(com.ocdiary.riteclicker.handlers.EventHandler.class);
+        MinecraftForge.EVENT_BUS.register(EventsHandler.class);
     }
 
 }
